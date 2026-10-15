@@ -9,20 +9,20 @@ Audio history remains in browser IndexedDB on the current device. Reference voic
 1. In Cloudflare Dashboard, open **Workers & Pages → KV**, create one production namespace and one preview namespace. From a supported desktop/CI host, Wrangler can create them with `npx wrangler kv namespace create VOXORA_KV` and `npx wrangler kv namespace create VOXORA_KV_PREVIEW`.
 2. Create a Pages project connected to this repository. Set the build command to `npm run build` and build output directory to `dist`.
 3. This repository includes `wrangler.toml`, so Cloudflare manages bindings from that file and the dashboard's Bindings editor is read-only. Copy each namespace ID from the KV namespace details, then uncomment and fill the `[[kv_namespaces]]` production block and `[[env.preview.kv_namespaces]]` preview block in `wrangler.toml`. Both bindings must be named exactly `VOXORA_KV`. Commit and push the file; the connected Pages project will redeploy with the configured bindings. Namespace IDs are identifiers, not secrets. Never put API keys or secret values in `wrangler.toml`.
-4. Add these as **Pages secrets**, in both environments as appropriate. Generate the values locally; do not paste them in frontend variables:
+4. Add these in **Pages → Settings → Variables and Secrets** for Production. Use `ADMIN_USERNAME` as a regular variable (3–40 characters), and set `ADMIN_PASSWORD` as a secret (12–200 characters). With both configured, the first admin signs in at `/admin/login`; the password remains managed by Cloudflare and is never copied into KV. Keep the existing first-run setup-secret flow as a fallback only when these two variables are absent. Add `SESSION_SECRET` and `SECRET_ENCRYPTION_KEY` as secrets, and `APP_ORIGIN` as a regular variable. Generate secret values locally; do not paste them in frontend variables:
 
    ```sh
    openssl rand -hex 32
    openssl rand -base64 32
    ```
 
-   - `ADMIN_SETUP_SECRET`: at least 24 random characters; required for first-run admin setup.
+   - `ADMIN_SETUP_SECRET`: optional fallback for the browser-based first-run setup when environment-managed admin credentials are not configured.
    - `SESSION_SECRET`: at least 32 random characters; required to create and validate admin sessions.
    - `SECRET_ENCRYPTION_KEY`: base64 encoding of exactly 32 random bytes; used for API-key encryption at rest.
    - `APP_ORIGIN`: the exact HTTPS origin for the Pages site (a regular Pages variable, not a secret).
 
    To add a secret with Wrangler, run `npx wrangler pages secret put SECRET_NAME --project-name voxora-ai` and enter the value at the prompt. Never use a `VITE_` variable for a secret.
-5. Open the Pages URL and visit `/admin/setup`. Create the initial administrator using the configured setup secret. Setup is disabled once the account has been created.
+5. Open the Pages URL and visit `/admin/login` to sign in with `ADMIN_USERNAME` and `ADMIN_PASSWORD`. If you did not configure those, visit `/admin/setup` and create the first administrator using `ADMIN_SETUP_SECRET`. Setup is disabled after account creation.
 6. Visit `/admin/api-keys` and save an OpenRouter key. It is encrypted before storage; reads return only a masked value. Then visit `/admin/models`, discover models from the speech modality catalog, enable the intended model, and set it as default.
 7. Make a short test generation from `/studio`. A real provider key and available model are required; errors are reported instead of showing fabricated audio.
 
