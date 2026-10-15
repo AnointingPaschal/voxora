@@ -21,3 +21,5 @@
 @media(max-width:600px){.script-actions{align-items:flex-end;flex-direction:column}.chunk-plan{flex-wrap:wrap}.chunk-plan>span:nth-child(2){min-width:calc(100% - 50px)}.chunk-plan .primary-small{margin-left:34px}.chunk-result{grid-template-columns:35px 1fr}}
 .backup-actions{display:flex;align-items:center;gap:8px;margin-top:13px}.backup-actions .generate-button{margin:0}.restore-button{position:relative;overflow:hidden}.restore-button input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
 @media(max-width:600px){.backup-actions{align-items:stretch;flex-direction:column}.backup-actions>*{width:100%}}
+
+.cloning-ready{border-color:rgba(112,190,137,.22);background:rgba(67,150,95,.08);color:#9cdbad}.upload-disabled{opacity:.58;pointer-events:none}.upload-card .transcript-field>span{display:flex;gap:7px;font-size:8px;letter-spacing:.8px;color:#a09aaa;font-weight:700}.upload-card .transcript-field>span small,.upload-card .transcript-field>small{font-size:8px;color:#827b8e;font-weight:500;letter-spacing:0}.upload-card .transcript-field textarea{box-sizing:border-box}
