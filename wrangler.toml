@@ -1,0 +1,7 @@
+name = "voxora-ai"
+pages_build_output_dir = "./dist"
+compatibility_date = "2026-10-15"
+
+# Create VOXORA_KV with `npx wrangler kv namespace create VOXORA_KV`,
+# then add the binding in Pages > Settings > Bindings for production/preview.
+# The function code expects a KV namespace binding named VOXORA_KV.

@@ -1,0 +1,4 @@
+import { createCipheriv,createDecipheriv,randomBytes } from 'node:crypto'
+function key(){const v=process.env.SECRET_ENCRYPTION_KEY;if(!v)throw new Error('Server encryption key is not configured. Set SECRET_ENCRYPTION_KEY and restart.');const b=Buffer.from(v,'base64');if(b.length!==32)throw new Error('SECRET_ENCRYPTION_KEY must be a base64-encoded 32-byte key.');return b}
+export function encrypt(v:string){const iv=randomBytes(12),c=createCipheriv('aes-256-gcm',key(),iv),d=Buffer.concat([c.update(v,'utf8'),c.final()]);return [iv.toString('base64'),c.getAuthTag().toString('base64'),d.toString('base64')].join('.')}
+export function decrypt(v:string){const [iv,tag,data]=v.split('.'),d=createDecipheriv('aes-256-gcm',key(),Buffer.from(iv,'base64'));d.setAuthTag(Buffer.from(tag,'base64'));return Buffer.concat([d.update(Buffer.from(data,'base64')),d.final()]).toString('utf8')}
