@@ -8,7 +8,7 @@ Audio history remains in browser IndexedDB on the current device. Reference voic
 
 1. In Cloudflare Dashboard, open **Workers & Pages → KV**, create one production namespace and one preview namespace. From a supported desktop/CI host, Wrangler can create them with `npx wrangler kv namespace create VOXORA_KV` and `npx wrangler kv namespace create VOXORA_KV_PREVIEW`.
 2. Create a Pages project connected to this repository. Set the build command to `npm run build` and build output directory to `dist`.
-3. In **Workers & Pages → your Pages project → Settings → Bindings**, bind the production namespace as `VOXORA_KV`. Bind the preview namespace with the same binding name in the preview environment. Redeploy after adding bindings.
+3. This repository includes `wrangler.toml`, so Cloudflare manages bindings from that file and the dashboard's Bindings editor is read-only. Copy each namespace ID from the KV namespace details, then uncomment and fill the `[[kv_namespaces]]` production block and `[[env.preview.kv_namespaces]]` preview block in `wrangler.toml`. Both bindings must be named exactly `VOXORA_KV`. Commit and push the file; the connected Pages project will redeploy with the configured bindings. Namespace IDs are identifiers, not secrets. Never put API keys or secret values in `wrangler.toml`.
 4. Add these as **Pages secrets**, in both environments as appropriate. Generate the values locally; do not paste them in frontend variables:
 
    ```sh
@@ -26,7 +26,7 @@ Audio history remains in browser IndexedDB on the current device. Reference voic
 6. Visit `/admin/api-keys` and save an OpenRouter key. It is encrypted before storage; reads return only a masked value. Then visit `/admin/models`, discover models from the speech modality catalog, enable the intended model, and set it as default.
 7. Make a short test generation from `/studio`. A real provider key and available model are required; errors are reported instead of showing fabricated audio.
 
-The application requires a KV namespace binding named exactly `VOXORA_KV`. The included `wrangler.toml` configures the Pages output and compatibility date; create and bind the namespace through the Cloudflare dashboard so production and preview use separate KV namespaces.
+The application requires a KV namespace binding named exactly `VOXORA_KV`. Because `wrangler.toml` is present, it is the source of truth for bindings. Use separate production and preview namespaces as described above; do not try to add them in the dashboard Bindings editor.
 
 ## Termux development
 

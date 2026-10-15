@@ -2,6 +2,13 @@ name = "voxora-ai"
 pages_build_output_dir = "./dist"
 compatibility_date = "2026-10-15"
 
-# Create VOXORA_KV with `npx wrangler kv namespace create VOXORA_KV`,
-# then add the binding in Pages > Settings > Bindings for production/preview.
-# The function code expects a KV namespace binding named VOXORA_KV.
+# Cloudflare treats this file as the source of truth for Pages bindings.
+# Production and preview currently share this namespace; use a separate preview
+# namespace later if you want isolated preview data.
+[[kv_namespaces]]
+binding = "VOXORA_KV"
+id = "56fa83c0950b4779bd0342d41cd7ad5c"
+
+[[env.preview.kv_namespaces]]
+binding = "VOXORA_KV"
+id = "56fa83c0950b4779bd0342d41cd7ad5c"
